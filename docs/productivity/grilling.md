@@ -30,6 +30,20 @@ The other half of the design is the split between facts and decisions. Facts are
 
 The frontier has one limit. The agent chooses it by judgement; it does not compute it from a graph. So it can put two questions in one round and only later find that one answer should have changed the other. The only guard is to tell it. That reopens the affected branch in the next round.
 
+## Finding earlier answers
+
+Questions keep their IDs across rounds and carry topic labels in the user's vocabulary. Before a round reaches the tenth question, the agent creates a results document that includes the earlier questions and answers too. It updates that record after each reply, so later questions can be checked against settled answers instead of relying on a long conversation alone.
+
+The topic index shows what is settled and what is still open. It does not predict how many questions remain. Grouping helps you find an answer; dependencies still decide which questions belong in a round. If you change an answer, the original question keeps its ID and records why it reopened.
+
+| Where you are interviewing | Where the results document goes |
+| --- | --- |
+| In a working directory | A session-specific `results.md` under `.scratch/grilling/` |
+| Without a working directory | A session-specific `results.md` in the OS temporary directory |
+| File writes are unavailable or prohibited | A Markdown checkpoint in the conversation, with no claim of persistence |
+
+The agent gives you the file's absolute path. Keep it when moving to another session or writing a spec; a temporary directory can be cleaned by the system. The record separates your answers from the agent's recommendations and preserves the original brief, corrections, and unresolved dependencies. It reduces dependence on compressed history, but cannot recover information that was already lost before it was recorded.
+
 ## What lives here and what lives in the wrappers
 
 This page covers the mechanism. The wrapper skills' pages answer the questions people ask most often.
@@ -66,6 +80,9 @@ That is a bug in the run, and it is the reason the skill's text separates facts 
 **Can I cap the number of questions?**
 No, and a cap is out of scope on purpose. Some plans need three questions and some need fifty; a fixed ceiling either truncates the hard case or feels arbitrary on the easy one. The intended control is plain language. Tell it to wrap up, or stop and accept the plan where it stands. If a session is running very long, the cause is usually that the scope was too big; break the work up and grill the pieces.
 
+**It forgot the earlier answers and asked the same thing again.**
+Starting with the round containing Q10, the results document is the record to consult before asking more questions, including when an old question is phrased differently. It includes Q1 onward, keeps topic groups and stable IDs, and updates after each reply. On resuming, give the agent that file so it can read the relevant answers and sources first. If an earlier answer was lost before the record was created, the agent should identify that gap rather than invent your answer. A checkpoint still requires the model to follow the instructions; it is not a guarantee against context loss.
+
 **I installed `grill-me` on its own and nothing happens.**
 `grill-me` is a one-line skill whose whole body is "run a `/grilling` session", so it needs this skill installed too. The same is true of `grill-with-docs`, which additionally needs [domain-modeling](https://aihero.dev/skills-domain-modeling). Installing the whole set avoids the problem; installing selectively means installing the primitives as well.
 
@@ -77,6 +94,8 @@ This is a real bug, still unfixed, and users report it across [harnesses](https:
 - A round arrives as a numbered list, each question with its recommendation on a separate `➡️` line, and you can answer the whole round by number.
 - Nothing in a round needs another question in the same round answered first.
 - Later rounds ask things the first round could not have asked.
+- Question IDs continue across rounds, topic labels make earlier answers easy to find, and the round containing Q10 gives you a results document with Q1 onward.
+- Later questions use your recorded answers; an intentionally reopened decision explains what changed.
 - It goes and looks facts up (reading files, dispatching a sub-agent) rather than asking you something it could have found out.
 - Research running in the background does not stall the round; only the questions that depend on it wait.
 - It stops at the end and asks you to confirm the understanding is shared, instead of starting work.

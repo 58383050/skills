@@ -2,7 +2,7 @@
 
 `grill-me` takes a **loose idea** and interviews you until you can commit to it. You do not need a worked-out plan to start, because the [session](https://www.aihero.dev/ai-coding-dictionary/session) exists to produce one. It asks in **rounds**. Each round is the whole **frontier**, which is every question whose prerequisites you have already settled. So it never asks you something that depends on an answer it hasn't heard yet.
 
-It is **[stateless](https://www.aihero.dev/ai-coding-dictionary/stateless)**. It writes no files and leaves no workspace behind. The only result is a clearer version of the idea, in your own head.
+It needs no repository or project setup. Longer interviews keep a results document from the round containing Q10, including the earlier answers, so the outcome can be revisited instead of living only in the conversation. Without a working directory, the file goes in a session-specific OS temporary directory; the agent gives you its absolute path. If files cannot be written, it provides a conversation-only Markdown checkpoint and says so.
 
 ## When to reach for it
 
@@ -12,7 +12,7 @@ Reach for it as soon as you have an idea worth taking seriously (a feature, a pr
 
 Which of the three grilling skills you want depends on what is in front of you:
 
-- **Anything, anywhere.** Use `grill-me`. It needs no repo and writes no files, and the subject doesn't have to be code.
+- **Anything, anywhere.** Use `grill-me`. It needs no repo, and the subject doesn't have to be code. Long interviews retain a results document without requiring project setup.
 - **A codebase to align against.** Use [grill-with-docs](https://aihero.dev/skills-grill-with-docs). It is the same interview, but [stateful](https://www.aihero.dev/ai-coding-dictionary/stateful): it reads your code and keeps what it learns in `GLOSSARY.md` and ADRs.
 - **Too big for one session.** Use [wayfinder](https://aihero.dev/skills-wayfinder). It charts the effort as a map and runs grilling sessions inside it.
 
@@ -51,6 +51,9 @@ Count rounds, not questions. Forty-six questions across four rounds is an ordina
 **It asked me two hundred questions. What went wrong?**
 Usually the scope was too large. Ask the agent to break the work into smaller pieces first, then grill each one. Very long sessions also drift into the **[dumb zone](https://www.aihero.dev/ai-coding-dictionary/smart-zone)**, where the [context window](https://www.aihero.dev/ai-coding-dictionary/context-window) is full enough that the questions get worse.
 
+**How do I find an answer from an earlier round?**
+Questions keep their numbers across rounds and have topic labels. From the round containing Q10, the [grilling](https://aihero.dev/skills-grilling) results document indexes the groups and records each question's answer and status, including Q1 through Q9. The agent checks it before asking more questions and updates it after your replies. Keep the file if you need to resume later, because temporary files can be cleaned by the system. It cannot restore answers already lost before they were recorded.
+
 **Can I go back to one question at a time?**
 Yes. Add this to your global `CLAUDE.md`:
 
@@ -69,8 +72,8 @@ More than for most skills. Grilling depends on the [model](https://www.aihero.de
 
 ## Where it fits
 
-`grill-me` is a **standalone you can run anywhere, on anything**. Because it is stateless, it is portable. It needs no repo, workspace, or setup, and does not assume the idea is about software. People use it for business decisions, for writing, and for what to do next: anything they cannot think through clearly on their own.
+`grill-me` is a **standalone you can run anywhere, on anything**. It needs no repo, workspace, or setup, and does not assume the idea is about software. People use it for business decisions, for writing, and for what to do next: anything they cannot think through clearly on their own.
 
-Portability is the only difference from [grill-with-docs](https://aihero.dev/skills-grill-with-docs). That skill runs the same interview, but reads a codebase to align against and records what it learns as `GLOSSARY.md` and ADRs. Both use the [grilling](https://aihero.dev/skills-grilling) skill underneath. `grill-me` is the user-invoked entry point that keeps no state.
+Portability is the difference from [grill-with-docs](https://aihero.dev/skills-grill-with-docs). That skill runs the same interview, but also reads a codebase to align against and records what it learns as `GLOSSARY.md` and ADRs. Both use the grilling skill underneath and share its results record for long interviews. `grill-me` does not create a project glossary or ADRs.
 
 If what you grilled does turn out to be software, you can hand the same conversation to [to-spec](https://aihero.dev/skills-to-spec) and carry on into the build flow (an option, not the point of the skill). When you're unsure which flow fits, [ask-matt](https://aihero.dev/skills-ask-matt) routes you.

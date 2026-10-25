@@ -32,6 +32,8 @@ The skill's leading word is **flow**, a path *through* the skills rather than a 
 - **Standalones**, which sit off every flow and which you use on their own: the prototype, the questionnaire, the research run.
 - **A vocabulary layer underneath**, the two references the other skills pull in when the words rather than the process are the problem.
 
+The grilling entry points share numbered questions, topic groups, and a results record from the round containing Q10. [grill-me](https://aihero.dev/skills-grill-me) remains usable without a repository, with the record in a temporary directory; [grill-with-docs](https://aihero.dev/skills-grill-with-docs) also aligns against a codebase and maintains its glossary and ADRs. The distinction is project integration, rather than whether a long interview can retain its answers.
+
 ## The phase boundary
 
 The skill's other key idea is the **phase boundary**. A phase is a chunk of work inside a session (the [grilling](https://www.aihero.dev/ai-coding-dictionary/grilling), the implementation, the QA), and the boundary between two of them is the only place the question "what do I do with this context?" belongs. Mid-phase there is nothing to decide: continue, or split what is left into [subagents](https://www.aihero.dev/ai-coding-dictionary/subagent).
